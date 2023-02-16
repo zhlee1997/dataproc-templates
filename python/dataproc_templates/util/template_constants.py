@@ -63,6 +63,7 @@ AWS_S3SECRETKEY = "fs.s3a.secret.key"
 SQL_EXTENSION= "spark.sql.extensions"
 CASSANDRA_EXTENSION= "com.datastax.spark.connector.CassandraSparkExtensions"
 CASSANDRA_CATALOG= "com.datastax.spark.connector.datasource.CassandraCatalog"
+FORMAT_PUBSUB = "pubsublite"
 
 # Output mode
 OUTPUT_MODE_OVERWRITE = "overwrite"
@@ -254,3 +255,15 @@ SNOWFLAKE_TO_GCS_PARTITION_COLUMN = "snowflake.to.gcs.partition.column"
 # Hive DDL Extractor Util
 HIVE_DDL_EXTRACTOR_INPUT_DATABASE = "hive.ddl.extractor.input.database"
 HIVE_DDL_EXTRACTOR_OUTPUT_GCS_PATH = "hive.ddl.extractor.output.path"
+
+# Pubsub to BQ
+PUBSUB_TO_BQ_INPUT_TOPIC = "pubsub.to.bq.input.topic"
+PUBSUB_TO_BQ_INPUT_SUBSCRIPTION = "pubsub.to.bq.input.subscription"
+PUBSUB_TO_BQ_INPUT_TIMEOUT_MS = "pubsub.to.bq.input.timeout.ms"
+PUBSUB_TO_BQ_STREAMING_DURATION_SECONDS = "pubsub.to.bq.streaming.duration.seconds"
+PUBSUB_TO_BQ_WRITE_MODE = "pubsub.to.bq.write.mode"
+PUBSUB_TO_BQ_TOTAL_RECEIVERS = "pubsub.to.bq.total.receivers"
+PUBSUB_TO_BQ_OUTPUT_DATASET = "pubsub.to.bq.output.dataset"
+PUBSUB_TO_BQ_OUTPUT_TABLE = "pubsub.to.bq.output.table"
+PUBSUB_TO_BQ_BATCH_SIZE = "pubsub.to.bq.batch.size"
+PUBSUB_TO_BQ_TEMPORARY_BUCKET = "pubsub.to.bq.bucket.name"
