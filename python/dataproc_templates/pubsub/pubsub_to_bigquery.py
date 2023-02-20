@@ -150,25 +150,15 @@ class PubsubToBQTemplate(BaseTemplate):
         
         input_data.withColumn("data", input_data.data.cast(StringType()))
 
-        query = (
-            input_data.writeStream.format("console")
-            .outputMode("append")
-            .trigger(processingTime="1 second")
-            .start()
-        )
+        # Write
+        query = (input_data.writeStream \
+            .format(constants.FORMAT_BIGQUERY) \
+            .option("temporaryGcsBucket","bucket-name") \
+            .option("checkpointLocation", "bucket-path") \
+            .option("table", "dataset.table") \
+            .trigger(processingTime="1 second") \
+            .start())
 
         # Wait 120 seconds (must be >= 60 seconds) to start receiving messages.
         query.awaitTermination(120)
         query.stop()
-        # [END pubsublite_spark_streaming_from_pubsublite]
-
-
-        # Write
-        # query = (input_data.writeStream.format("console") \
-        #     .outputMode("append") \
-        #     .trigger(processingTime="1 second") \
-        #     .start())
-
-        # # Wait 120 seconds (must be >= 60 seconds) to start receiving messages.
-        # query.awaitTermination(120)
-        # query.stop()
