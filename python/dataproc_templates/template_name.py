@@ -42,6 +42,7 @@ class TemplateName(Enum):
     CASSANDRATOBQ= "CASSANDRATOBQ"
     CASSANDRATOGCS = "CASSANDRATOGCS"
     HIVEDDLEXTRACTOR = "HIVEDDLEXTRACTOR"
+    PUBSUBTOBQ = "PUBSUBTOBQ"
 
     @classmethod
     def from_string(cls, template_name: str) -> TemplateName:
