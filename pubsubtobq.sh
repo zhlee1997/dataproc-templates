@@ -7,11 +7,11 @@ export JARS="gs://spark-lib/pubsublite/pubsublite-spark-sql-streaming-LATEST-wit
 cd python
 
 ./bin/start.sh \
--- --template=PUBSUBTOBQ \
---pubsub.to.bq.input.subscription=arindamsarkar-test-sub-lite \
---pubsub.to.bq.project.id=yadavaja-sandbox \
---pubsub.to.bq.output.dataset=arindamsarkar_test \
---pubsub.to.bq.output.table=pubsubtobq \
---pubsub.to.bq.write.mode=overwrite \
---pubsub.to.bq.bucket.name=arindamsarkar-test \
---pubsub.to.bq.checkpoint.location=gs://arindamsarkar-test/pubsubtogcs-checkpoint-location
+-- --template=PUBSUBLITETOBQ \
+--pubsublite.to.bq.input.subscription=arindamsarkar-test-sub-lite \
+--pubsublite.to.bq.project.id=yadavaja-sandbox \
+--pubsublite.to.bq.output.dataset=arindamsarkar_test \
+--pubsublite.to.bq.output.table=pubsubtobq \
+--pubsublite.to.bq.write.mode=overwrite \
+--pubsublite.to.bq.bucket.name=arindamsarkar-test \
+--pubsublite.to.bq.checkpoint.location=gs://arindamsarkar-test/pubsubtogcs-checkpoint-location

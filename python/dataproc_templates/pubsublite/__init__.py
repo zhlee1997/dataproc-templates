@@ -12,4 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .pubsub_to_bigquery import PubsubToBQTemplate
+from .pubsublite_to_bigquery import PubsubliteToBQTemplate

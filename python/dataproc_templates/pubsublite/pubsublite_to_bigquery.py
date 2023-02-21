@@ -23,11 +23,11 @@ from pyspark.sql.types import StringType
 from dataproc_templates import BaseTemplate
 import dataproc_templates.util.template_constants as constants
 
-__all__ = ['PubsubToBQTemplate']
+__all__ = ['PubsubliteToBQTemplate']
 
-class PubsubToBQTemplate(BaseTemplate):
+class PubsubliteToBQTemplate(BaseTemplate):
     """
-    Dataproc template implementing exports from Pubsub to BQ
+    Dataproc template implementing exports from Pubsublite to BQ
     """
 
     @staticmethod
@@ -35,34 +35,34 @@ class PubsubToBQTemplate(BaseTemplate):
         parser: argparse.ArgumentParser = argparse.ArgumentParser()
 
         parser.add_argument(
-            f'--{constants.PUBSUB_TO_BQ_INPUT_TOPIC}',
-            dest=constants.PUBSUB_TO_BQ_INPUT_TOPIC,
+            f'--{constants.PUBSUBLITE_TO_BQ_INPUT_TOPIC}',
+            dest=constants.PUBSUBLITE_TO_BQ_INPUT_TOPIC,
             required=False,
-            help='Pubsub to BQ Input topic name'
+            help='Pubsublite to BQ Input topic name'
         )
         parser.add_argument(
-            f'--{constants.PUBSUB_TO_BQ_INPUT_SUBSCRIPTION}',
-            dest=constants.PUBSUB_TO_BQ_INPUT_SUBSCRIPTION,
+            f'--{constants.PUBSUBLITE_TO_BQ_INPUT_SUBSCRIPTION}',
+            dest=constants.PUBSUBLITE_TO_BQ_INPUT_SUBSCRIPTION,
             required=True,
-            help='Pubsub to BQ Input subscription name'
+            help='Pubsublite to BQ Input subscription name'
         )
         parser.add_argument(
-            f'--{constants.PUBSUB_TO_BQ_INPUT_TIMEOUT_MS}',
-            dest=constants.PUBSUB_TO_BQ_INPUT_TIMEOUT_MS,
+            f'--{constants.PUBSUBLITE_TO_BQ_INPUT_TIMEOUT_MS}',
+            dest=constants.PUBSUBLITE_TO_BQ_INPUT_TIMEOUT_MS,
             required=False,
             default=60000,
             help='Stream timeout, for how long the subscription will be read'
         )
         parser.add_argument(
-            f'--{constants.PUBSUB_TO_BQ_STREAMING_DURATION_SECONDS}',
-            dest=constants.PUBSUB_TO_BQ_STREAMING_DURATION_SECONDS,
+            f'--{constants.PUBSUBLITE_TO_BQ_STREAMING_DURATION_SECONDS}',
+            dest=constants.PUBSUBLITE_TO_BQ_STREAMING_DURATION_SECONDS,
             required=False,
             default=15,
             help='Streaming duration, how often wil writes to BQ be triggered'
         )
         parser.add_argument(
-            f'--{constants.PUBSUB_TO_BQ_WRITE_MODE}',
-            dest=constants.PUBSUB_TO_BQ_WRITE_MODE,
+            f'--{constants.PUBSUBLITE_TO_BQ_WRITE_MODE}',
+            dest=constants.PUBSUBLITE_TO_BQ_WRITE_MODE,
             required=False,
             default=constants.OUTPUT_MODE_APPEND,
             help=(
@@ -78,46 +78,46 @@ class PubsubToBQTemplate(BaseTemplate):
             ]
         )
         parser.add_argument(
-            f'--{constants.PUBSUB_TO_BQ_TOTAL_RECEIVERS}',
-            dest=constants.PUBSUB_TO_BQ_TOTAL_RECEIVERS,
+            f'--{constants.PUBSUBLITE_TO_BQ_TOTAL_RECEIVERS}',
+            dest=constants.PUBSUBLITE_TO_BQ_TOTAL_RECEIVERS,
             required=False,
             default=5,
-            help='PUBSUB_TO_BQ_TOTAL_RECEIVERS'
+            help='PUBSUBLITE_TO_BQ_TOTAL_RECEIVERS'
         )
         parser.add_argument(
-            f'--{constants.PUBSUB_TO_BQ_PROJECT_ID}',
-            dest=constants.PUBSUB_TO_BQ_PROJECT_ID,
+            f'--{constants.PUBSUBLITE_TO_BQ_PROJECT_ID}',
+            dest=constants.PUBSUBLITE_TO_BQ_PROJECT_ID,
             required=True,
             help='BQ Project ID'
         )
         parser.add_argument(
-            f'--{constants.PUBSUB_TO_BQ_OUTPUT_DATASET}',
-            dest=constants.PUBSUB_TO_BQ_OUTPUT_DATASET,
+            f'--{constants.PUBSUBLITE_TO_BQ_OUTPUT_DATASET}',
+            dest=constants.PUBSUBLITE_TO_BQ_OUTPUT_DATASET,
             required=True,
             help='BigQuery output dataset'
         )
         parser.add_argument(
-            f'--{constants.PUBSUB_TO_BQ_OUTPUT_TABLE}',
-            dest=constants.PUBSUB_TO_BQ_OUTPUT_TABLE,
+            f'--{constants.PUBSUBLITE_TO_BQ_OUTPUT_TABLE}',
+            dest=constants.PUBSUBLITE_TO_BQ_OUTPUT_TABLE,
             required=True,
             help='BigQuery output table'
         )
         parser.add_argument(
-            f'--{constants.PUBSUB_TO_BQ_BATCH_SIZE}',
-            dest=constants.PUBSUB_TO_BQ_BATCH_SIZE,
+            f'--{constants.PUBSUBLITE_TO_BQ_BATCH_SIZE}',
+            dest=constants.PUBSUBLITE_TO_BQ_BATCH_SIZE,
             required=False,
             default=1000,
             help='Number of records to be written per message to BigQuery'
         )
         parser.add_argument(
-            f'--{constants.PUBSUB_TO_BQ_TEMPORARY_BUCKET}',
-            dest=constants.PUBSUB_TO_BQ_TEMPORARY_BUCKET,
+            f'--{constants.PUBSUBLITE_TO_BQ_TEMPORARY_BUCKET}',
+            dest=constants.PUBSUBLITE_TO_BQ_TEMPORARY_BUCKET,
             required=True,
             help='Temporary bucket for the Spark BigQuery connector'
         )
         parser.add_argument(
-            f'--{constants.PUBSUB_CHECKPOINT_LOCATION}',
-            dest=constants.PUBSUB_CHECKPOINT_LOCATION,
+            f'--{constants.PUBSUBLITE_CHECKPOINT_LOCATION}',
+            dest=constants.PUBSUBLITE_CHECKPOINT_LOCATION,
             required=True,
             help='Temporary folder for checkpoint location'
         )
@@ -132,20 +132,15 @@ class PubsubToBQTemplate(BaseTemplate):
         logger: Logger = self.get_logger(spark=spark)
 
         # Arguments
-        input_subscription: str = args[constants.PUBSUB_TO_BQ_INPUT_SUBSCRIPTION]
-        # input_timeout: str = args[constants.PUBSUB_TO_BQ_INPUT_TIMEOUT_MS]
-        # input_streaming_duration: str = args[constants.PUBSUB_TO_BQ_STREAMING_DURATION_SECONDS]
-        # output_write_mode: str = args[constants.PUBSUB_TO_BQ_WRITE_MODE]
-        # total_receivers: str = args[constants.PUBSUB_TO_BQ_TOTAL_RECEIVERS]
-        output_project_id: str = args[constants.PUBSUB_TO_BQ_PROJECT_ID]
-        output_dataset: str = args[constants.PUBSUB_TO_BQ_OUTPUT_DATASET]
-        output_table: str = args[constants.PUBSUB_TO_BQ_OUTPUT_TABLE]
-        # batch_size: str = args[constants.PUBSUB_TO_BQ_BATCH_SIZE]
-        pubsub_checkpoint_location: str = args[constants.PUBSUB_CHECKPOINT_LOCATION]
-        bq_temp_bucket: str = args[constants.PUBSUB_TO_BQ_TEMPORARY_BUCKET]
+        input_subscription: str = args[constants.PUBSUBLITE_TO_BQ_INPUT_SUBSCRIPTION]
+        output_project_id: str = args[constants.PUBSUBLITE_TO_BQ_PROJECT_ID]
+        output_dataset: str = args[constants.PUBSUBLITE_TO_BQ_OUTPUT_DATASET]
+        output_table: str = args[constants.PUBSUBLITE_TO_BQ_OUTPUT_TABLE]
+        pubsublite_checkpoint_location: str = args[constants.PUBSUBLITE_CHECKPOINT_LOCATION]
+        bq_temp_bucket: str = args[constants.PUBSUBLITE_TO_BQ_TEMPORARY_BUCKET]
 
         logger.info(
-            "Starting Pubsub to Bigquery spark job with parameters:\n"
+            "Starting Pubsublite to Bigquery spark job with parameters:\n"
             f"{pprint.pformat(args)}"
         )
         # Set configuration to connect to Cassandra by overwriting the spark session
@@ -158,8 +153,8 @@ class PubsubToBQTemplate(BaseTemplate):
 
         # Read
         input_data=(spark.readStream \
-            .format(constants.FORMAT_PUBSUB) \
-            .option(f"{constants.FORMAT_PUBSUB}.subscription",f"projects/617357862702/locations/us-west1/subscriptions/{input_subscription}",) \
+            .format(constants.FORMAT_PUBSUBLITE) \
+            .option(f"{constants.FORMAT_PUBSUBLITE}.subscription",f"projects/617357862702/locations/us-west1/subscriptions/{input_subscription}",) \
             .load())
         
         input_data.withColumn("data", input_data.data.cast(StringType()))
@@ -168,7 +163,7 @@ class PubsubToBQTemplate(BaseTemplate):
         query = (input_data.writeStream \
             .format(constants.FORMAT_BIGQUERY) \
             .option("temporaryGcsBucket", bq_temp_bucket) \
-            .option("checkpointLocation", pubsub_checkpoint_location) \
+            .option("checkpointLocation", pubsublite_checkpoint_location) \
             .option("table", f"{output_project_id}.{output_dataset}.{output_table}") \
             .trigger(processingTime="1 second") \
             .start())
