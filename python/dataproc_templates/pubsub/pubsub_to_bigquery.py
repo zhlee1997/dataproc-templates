@@ -85,6 +85,12 @@ class PubsubToBQTemplate(BaseTemplate):
             help='PUBSUB_TO_BQ_TOTAL_RECEIVERS'
         )
         parser.add_argument(
+            f'--{constants.PUBSUB_TO_BQ_PROJECT_ID}',
+            dest=constants.PUBSUB_TO_BQ_PROJECT_ID,
+            required=True,
+            help='BQ Project ID'
+        )
+        parser.add_argument(
             f'--{constants.PUBSUB_TO_BQ_OUTPUT_DATASET}',
             dest=constants.PUBSUB_TO_BQ_OUTPUT_DATASET,
             required=True,
@@ -109,6 +115,12 @@ class PubsubToBQTemplate(BaseTemplate):
             required=True,
             help='Temporary bucket for the Spark BigQuery connector'
         )
+        parser.add_argument(
+            f'--{constants.PUBSUB_CHECKPOINT_LOCATION}',
+            dest=constants.PUBSUB_CHECKPOINT_LOCATION,
+            required=True,
+            help='Temporary folder for checkpoint location'
+        )
 
         known_args: argparse.Namespace
         known_args, _ = parser.parse_known_args(args)
@@ -125,10 +137,12 @@ class PubsubToBQTemplate(BaseTemplate):
         # input_streaming_duration: str = args[constants.PUBSUB_TO_BQ_STREAMING_DURATION_SECONDS]
         # output_write_mode: str = args[constants.PUBSUB_TO_BQ_WRITE_MODE]
         # total_receivers: str = args[constants.PUBSUB_TO_BQ_TOTAL_RECEIVERS]
-        # output_dataset: str = args[constants.PUBSUB_TO_BQ_OUTPUT_DATASET]
-        # output_table: str = args[constants.PUBSUB_TO_BQ_OUTPUT_TABLE]
+        output_project_id: str = args[constants.PUBSUB_TO_BQ_PROJECT_ID]
+        output_dataset: str = args[constants.PUBSUB_TO_BQ_OUTPUT_DATASET]
+        output_table: str = args[constants.PUBSUB_TO_BQ_OUTPUT_TABLE]
         # batch_size: str = args[constants.PUBSUB_TO_BQ_BATCH_SIZE]
-        # bq_temp_bucket: str = args[constants.PUBSUB_TO_BQ_TEMPORARY_BUCKET]
+        pubsub_checkpoint_location: str = args[constants.PUBSUB_CHECKPOINT_LOCATION]
+        bq_temp_bucket: str = args[constants.PUBSUB_TO_BQ_TEMPORARY_BUCKET]
 
         logger.info(
             "Starting Pubsub to Bigquery spark job with parameters:\n"
@@ -153,9 +167,9 @@ class PubsubToBQTemplate(BaseTemplate):
         # Write
         query = (input_data.writeStream \
             .format(constants.FORMAT_BIGQUERY) \
-            .option("temporaryGcsBucket","bucket-name") \
-            .option("checkpointLocation", "bucket-path") \
-            .option("table", "dataset.table") \
+            .option("temporaryGcsBucket", bq_temp_bucket) \
+            .option("checkpointLocation", pubsub_checkpoint_location) \
+            .option("table", f"{output_project_id}.{output_dataset}.{output_table}") \
             .trigger(processingTime="1 second") \
             .start())
 
