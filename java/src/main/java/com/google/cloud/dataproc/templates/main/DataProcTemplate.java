@@ -37,6 +37,7 @@ import com.google.cloud.dataproc.templates.kafka.KafkaToPubSub;
 import com.google.cloud.dataproc.templates.pubsub.PubSubToBQ;
 import com.google.cloud.dataproc.templates.pubsub.PubSubToBigTable;
 import com.google.cloud.dataproc.templates.pubsub.PubSubToGCS;
+import com.google.cloud.dataproc.templates.pubsublite.PubSubLiteToGCS;
 import com.google.cloud.dataproc.templates.s3.S3ToBigQuery;
 import com.google.cloud.dataproc.templates.snowflake.SnowflakeToGCS;
 import com.google.cloud.dataproc.templates.util.PropertyUtil;
@@ -71,6 +72,7 @@ public class DataProcTemplate {
           .put(TemplateName.PUBSUBTOBQ, (args) -> new PubSubToBQ())
           .put(TemplateName.PUBSUBTOBIGTABLE, (args) -> new PubSubToBigTable())
           .put(TemplateName.PUBSUBTOGCS, (args) -> new PubSubToGCS())
+          .put(TemplateName.PUBSUBLITETOGCS, (args) -> new PubSubLiteToGCS())
           .put(TemplateName.REDSHIFTTOGCS, RedshiftToGCS::of)
           .put(TemplateName.GCSTOBIGQUERY, (args) -> new GCStoBigquery())
           .put(TemplateName.GCSTOBIGTABLE, (args) -> new GCStoBigTable())
