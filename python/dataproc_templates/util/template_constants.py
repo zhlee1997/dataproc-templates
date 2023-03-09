@@ -66,7 +66,6 @@ AWS_S3ENDPOINT = "fs.s3a.endpoint"
 SQL_EXTENSION= "spark.sql.extensions"
 CASSANDRA_EXTENSION= "com.datastax.spark.connector.CassandraSparkExtensions"
 CASSANDRA_CATALOG= "com.datastax.spark.connector.datasource.CassandraCatalog"
-FORMAT_PUBSUBLITE = "pubsublite"
 
 
 # Output mode
@@ -285,16 +284,3 @@ S3_BQ_OUTPUT_TABLE_NAME = "s3.bq.output.table.name"
 S3_BQ_TEMP_BUCKET_NAME = "s3.bq.temp.bucket.name"
 S3_BQ_OUTPUT_MODE = "s3.bq.output.mode"
 S3_BQ_ENDPOINT_VALUE = "s3.amazonaws.com"
-
-#Pubsublite To GCS
-PUBSUBLITE_TO_GCS_INPUT_PROJECT_ID = "pubsublite.to.gcs.input.project.id"
-PUBSUBLITE_TO_GCS_OUTPUT_PROJECT_ID = "pubsublite.to.gcs.output.project.id"
-PUBSUBLITE_TO_GCS_INPUT_TOPIC = "pubsublite.to.gcs.input.topic"
-PUBSUBLITE_TO_GCS_INPUT_SUBSCRIPTION = "pubsublite.to.gcs.input.subscription"
-PUBSUBLITE_TO_GCS_INPUT_TIMEOUT_MS = "pubsublite.to.gcs.input.timeout.ms"
-PUBSUBLITE_TO_GCS_STREAMING_DURATION_SECONDS = "pubsublite.to.gcs.streaming.duration.seconds"
-PUBSUBLITE_TO_GCS_WRITE_MODE = "pubsublite.to.gcs.write.mode"
-PUBSUBLITE_TO_GCS_TOTAL_RECEIVERS = "pubsublite.to.gcs.total.receivers"
-PUBSUBLITE_TO_GCS_BATCH_SIZE = "pubsublite.to.gcs.batch.size"
-PUBSUBLITE_TO_GCS_OUTPUT_LOCATION = "pubsublite.to.gcs.output.location"
-PUBSUBLITE_CHECKPOINT_LOCATION = "pubsublite.to.gcs.checkpoint.location"
