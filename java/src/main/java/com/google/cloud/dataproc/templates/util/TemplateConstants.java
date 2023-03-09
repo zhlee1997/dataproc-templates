@@ -412,4 +412,18 @@ public interface TemplateConstants {
   String MONGO_GCS_INPUT_URI = "mongo.gcs.input.uri";
   String MONGO_GCS_INPUT_DATABASE = "mongo.gcs.input.database";
   String MONGO_GCS_INPUT_COLLECTION = "mongo.gcs.input.collection";
+
+  /** PubsubliteToGCS properties */
+  String PUBSUBLITE_TO_GCS_INPUT_PROJECT_ID = "pubsublite.to.gcs.input.project.id";
+  String PUBSUBLITE_TO_GCS_OUTPUT_PROJECT_ID = "pubsublite.to.gcs.output.project.id";
+  String PUBSUBLITE_TO_GCS_INPUT_TOPIC = "pubsublite.to.gcs.input.topic";
+  String PUBSUBLITE_TO_GCS_INPUT_SUBSCRIPTION = "pubsublite.to.gcs.input.subscription";
+  String PUBSUBLITE_TO_GCS_INPUT_TIMEOUT_MS = "pubsublite.to.gcs.input.timeout.ms";
+  String PUBSUBLITE_TO_GCS_STREAMING_DURATION_SECONDS = "pubsublite.to.gcs.streaming.duration.seconds";
+  String PUBSUBLITE_TO_GCS_WRITE_MODE = "pubsublite.to.gcs.write.mode";
+  String PUBSUBLITE_TO_GCS_TOTAL_RECEIVERS = "pubsublite.to.gcs.total.receivers";
+  String PUBSUBLITE_TO_GCS_BATCH_SIZE = "pubsublite.to.gcs.batch.size";
+  String PUBSUBLITE_TO_GCS_OUTPUT_LOCATION = "pubsublite.to.gcs.output.location";
+  String PUBSUBLITE_CHECKPOINT_LOCATION = "pubsublite.to.gcs.checkpoint.location";
+
 }
