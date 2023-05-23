@@ -51,6 +51,32 @@ Below configurations are required before proceeding further.
 * `OUTPUT_MODE` : Output write mode (one of: append,overwrite,ignore,errorifexists)(Defaults to overwrite)
 * `BATCH_SIZE` : JDBC output batch size. Default set to 1000
 
+### Run programmatically with parameterize script
+
+Alternatively to running the notebook manually, we developed a "parameterize" script, using the papermill lib, to allow running notebooks programmatically from a Python script, with parameters.
+
+**Example submission:**
+
+```shell
+export GCP_PROJECT=<project>
+export REGION=<region>
+export GCS_STAGING_LOCATION=gs://<bucket-name>
+export SUBNET=<subnet>
+export SERVICE_ACCOUNT=<service-account>
+python run_notebook.py --script=ORACLETOBIGQUERY \
+                        --oracle.host="10.x.x.x" \
+                        --oracle.port="3306" \
+                        --oracle.username="user" \
+                        --oracle.password="password" \
+                        --oracle.database="db" \
+                        --oracle.table.list="employee" \
+                        --bigquery.dataset="bq-dataset" \
+                        --temp.gcs.bucket="my-bucket"
+```
+
+**Parameters:**
+
+
 ### Required JAR files
 
 This notebook requires the MSSQL and POSTGRES connector jars. Installation information is present in the notebook
