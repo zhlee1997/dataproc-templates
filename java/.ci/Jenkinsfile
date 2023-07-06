@@ -617,25 +617,6 @@ pipeline {
                             '''
                         }
                     }
-                    stage('BIGQUERY TO GCS (avro)'){
-                        steps {
-                            sh '''
-                                export SKIP_BUILD=true
-                                    
-                                cd java
-                                
-                                export JARS=gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar
-
-                                bin/start.sh \
-                                -- --template=BIGQUERYTOGCS \
-                                --templateProperty project.id=$GCP_PROJECT \
-                                --templateProperty bigquery.gcs.input.table=$GCP_PROJECT:dataproc_templates.emp_table \
-                                --templateProperty bigquery.gcs.output.format=avro \
-                                --templateProperty bigquery.gcs.output.mode=Overwrite \
-                                --templateProperty bigquery.gcs.output.location=gs://dataproc-templates/integration-testing/output/BIGQUERYTOGCS/avro
-                            '''
-                        }
-                    }
                     stage('TEXT TO BIGQUERY'){
                         steps {
                             sh '''
@@ -660,22 +641,7 @@ pipeline {
             }
             stage('Parallel Execution 8'){
                 parallel{
-                    stage('BIGQUERY TO GCS (csv)'){
-                        steps {
-                            sh '''
-                                export SKIP_BUILD=true
-                                    
-                                cd java
 
-                                bin/start.sh \
-                                -- --template BIGQUERYTOGCS \
-                                --templateProperty bigquery.gcs.input.table="dataproc_templates.bqtogcs" \
-                                --templateProperty bigquery.gcs.output.format="csv" \
-                                --templateProperty bigquery.gcs.output.mode="Overwrite" \
-                                --templateProperty bigquery.gcs.output.location="gs://dataproc-templates/integration-testing/output/BIGQUERYTOGCS/csv/"
-                            '''
-                        }
-                    }
                     stage('HBASE TO GCS (Manual)(avro)') {
                         steps{
                             
