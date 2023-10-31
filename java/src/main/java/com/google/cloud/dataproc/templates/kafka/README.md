@@ -238,3 +238,50 @@ bin/start.sh \
 --templateProperty kafka.pubsub.starting.offset=earliest \
 --templateProperty kafka.pubsub.await.termination.timeout=120000
 ```
+
+## 4. Kafka To GCS via spark Direct stream
+
+General Execution:
+
+```
+GCP_PROJECT=<gcp-project-id> \
+REGION=<region>  \
+SUBNET=<subnet>   \
+GCS_STAGING_LOCATION=<gcs-staging-bucket-folder> \
+HISTORY_SERVER_CLUSTER=<history-server> \
+bin/start.sh \
+-- --template KafkaTOGCSDstream \
+--templateProperty project.id=<gcp-project-id> \
+--templateProperty kafka.gcs.output.location=<gcs path> \
+--templateProperty kafka.bootstrap.servers=<kafka broker list> \
+--templateProperty kafka.topic=<kafka topic name> \
+--templateProperty kafka.starting.offset=<latest | earliest> \
+--templateProperty kafka.message.format=<kafka message format> 
+--templateProperty kafka.gcs.write.mode=<Append | Overwrite | ErrorIfExists | Ignore> \
+--templateProperty kafka.gcs.batch.interval=<Batch interval of the stream> \
+--templateProperty kafka.gcs.consumer.group.id=<Consumer group id for the kafka topic>
+--templateProperty kafka.gcs.output.format=<csv>
+```
+
+
+### Example submission
+```
+export GCP_PROJECT=dp-test-project
+export REGION=us-central1
+export SUBNET=test-subnet
+export GCS_STAGING_LOCATION=gs://dp-templates-kakfatogcs/stg
+export GCS_OUTPUT_PATH=gs://dp-templates-kafkatogcs/output/
+bin/start.sh \
+-- --template KafkaTOGCSDstream \
+--templateProperty project.id=$GCP_PROJECT \
+--templateProperty kafka.bootstrap.servers=102.1.1.20:9092 \
+--templateProperty kafka.topic=events-topic \
+--templateProperty kafka.starting.offset=latest \
+--templateProperty kafka.message.format=byte \
+--templateProperty kafka.gcs.output.location=$GCS_OUTPUT_PATH \
+--templateProperty kafka.gcs.output.format=parquet \
+--templateProperty kafka.gcs.write.mode=Append \
+--templateProperty kafka.gcs.batch.interval=60000 \
+--templateProperty kafka.gcs.consumer.group.id=test.group.id
+
+```
