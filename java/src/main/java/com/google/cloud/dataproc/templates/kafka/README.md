@@ -259,8 +259,9 @@ bin/start.sh \
 --templateProperty kafka.message.format=<kafka message format> 
 --templateProperty kafka.gcs.write.mode=<Append | Overwrite | ErrorIfExists | Ignore> \
 --templateProperty kafka.gcs.batch.interval=<Batch interval of the stream> \
---templateProperty kafka.gcs.consumer.group.id=<Consumer group id for the kafka topic>
---templateProperty kafka.gcs.output.format=<csv>
+--templateProperty kafka.gcs.consumer.group.id=<Consumer group id for the kafka topic> \
+--templateProperty kafka.gcs.output.format=<csv> \
+--templateProperty kafka.schema.url=<json schema url>
 ```
 
 
@@ -277,11 +278,11 @@ bin/start.sh \
 --templateProperty kafka.bootstrap.servers=102.1.1.20:9092 \
 --templateProperty kafka.topic=events-topic \
 --templateProperty kafka.starting.offset=latest \
---templateProperty kafka.message.format=byte \
+--templateProperty kafka.message.format=byte|json \
 --templateProperty kafka.gcs.output.location=$GCS_OUTPUT_PATH \
 --templateProperty kafka.gcs.output.format=parquet \
 --templateProperty kafka.gcs.write.mode=Append \
 --templateProperty kafka.gcs.batch.interval=60000 \
---templateProperty kafka.gcs.consumer.group.id=test.group.id
-
+--templateProperty kafka.gcs.consumer.group.id=test.group.id \
+--templateProperty kafka.schema.url=gs://dp-templates-kafkatogcs/schema/msg_schema.json
 ```
