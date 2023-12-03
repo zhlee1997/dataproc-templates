@@ -31,7 +31,6 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.VoidFunction2;
 import org.apache.spark.sql.*;
-import org.apache.spark.sql.streaming.StreamingQueryException;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.Time;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
@@ -44,15 +43,14 @@ import scala.Tuple2;
 /**
  * Spark job to move data or/and schema from Kafka topic to GCS via spark Direct Stream. This
  * template can be configured to run in few different modes. In default mode kafka.gcs.write.mode is
- * set to "append". For detailed list of properties refer "KafkaToGCS Template properties" section
- * in resources/template.properties file.
+ * set to "append". For detailed list of properties refer "KafkaToGCSDstream Template properties"
+ * section in resources/template.properties file.
  */
 public class KafkaToGCSDstream implements BaseTemplate {
 
   public static final Logger LOGGER = LoggerFactory.getLogger(KafkaToGCSDstream.class);
 
   private long batchInterval;
-  private String projectID;
   private String kafkaMessageFormat;
   private String gcsOutputLocation;
   private String gcsWriteMode;
@@ -66,7 +64,6 @@ public class KafkaToGCSDstream implements BaseTemplate {
 
   public KafkaToGCSDstream() {
 
-    projectID = getProperties().getProperty(PROJECT_ID_PROP);
     kafkaBootstrapServers = getProperties().getProperty(KAFKA_BOOTSTRAP_SERVERS);
     kafkaTopic = getProperties().getProperty(KAFKA_TOPIC);
     kafkaMessageFormat = getProperties().getProperty(KAFKA_MESSAGE_FORMAT);
@@ -81,8 +78,7 @@ public class KafkaToGCSDstream implements BaseTemplate {
   }
 
   @Override
-  public void runTemplate()
-      throws StreamingQueryException, TimeoutException, SQLException, InterruptedException {
+  public void runTemplate() throws TimeoutException, SQLException, InterruptedException {
 
     SparkSession spark =
         SparkSession.builder().appName("Kafka to GCS via Direct stream").getOrCreate();
@@ -130,12 +126,13 @@ public class KafkaToGCSDstream implements BaseTemplate {
               Dataset<Row> processedData =
                   reader.getDatasetByMessageFormat(rowDataset, getProperties());
 
-              DataFrameWriter<Row> writer =
-                  processedData.write().mode(gcsWriteMode).format(gcsOutputFormat);
+              if (!processedData.isEmpty()) {
+                DataFrameWriter<Row> writer =
+                    processedData.write().mode(gcsWriteMode).format(gcsOutputFormat);
 
-              LOGGER.debug("Writing kafka data into GCS");
-              writer.format(gcsOutputFormat).save(gcsOutputLocation);
-
+                LOGGER.debug("Writing kafka data into GCS");
+                writer.format(gcsOutputFormat).save(gcsOutputLocation);
+              }
               ((CanCommitOffsets) stream.inputDStream()).commitAsync(offsetRanges);
             });
 
@@ -145,16 +142,14 @@ public class KafkaToGCSDstream implements BaseTemplate {
 
   @Override
   public void validateInput() throws IllegalArgumentException {
-    if (StringUtils.isAllBlank(projectID)
-        || StringUtils.isAllBlank(gcsOutputLocation)
+    if (StringUtils.isAllBlank(gcsOutputLocation)
         || StringUtils.isAllBlank(gcsOutputFormat)
         || StringUtils.isAllBlank(gcsWriteMode)
         || StringUtils.isAllBlank(kafkaBootstrapServers)
         || StringUtils.isAllBlank(kafkaTopic)
         || StringUtils.isAllBlank(kafkaMessageFormat)) {
       LOGGER.error(
-          "{},{},{},{},{},{},{} are required parameter. ",
-          PROJECT_ID_PROP,
+          "{},{},{},{},{},{} are required parameter. ",
           KAFKA_GCS_OUTPUT_LOCATION,
           KAFKA_GCS_OUTPUT_FORMAT,
           KAFKA_GCS_WRITE_MODE,
@@ -162,14 +157,14 @@ public class KafkaToGCSDstream implements BaseTemplate {
           KAFKA_TOPIC,
           KAFKA_MESSAGE_FORMAT);
       throw new IllegalArgumentException(
-          "Required parameters for GCStoGCS not passed. "
-              + "Set mandatory parameter for GCStoGCS template "
+          "Required parameters for KafkaTOGCSDstream not passed. "
+              + "Set mandatory parameter for KafkaTOGCSDstream template "
               + "in resources/conf/template.properties file.");
     }
 
     if (kafkaMessageFormat.equals("json") & StringUtils.isAllBlank(kafkaSchemaUrl)) {
       LOGGER.error("{} is a required parameter for JSON format messages", KAFKA_SCHEMA_URL);
-      throw new IllegalArgumentException("Required parameters for KafkaToGCS not passed.");
+      throw new IllegalArgumentException("Required parameters for KafkaTOGCSDstream not passed.");
     }
 
     LOGGER.info(
